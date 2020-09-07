@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Skrilla.OAuth": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:38057;http://localhost:24463",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
