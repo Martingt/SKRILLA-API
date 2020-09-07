@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace SKRILLA_API
+namespace Skrilla.Oauth
 {
     public class Program
     {
