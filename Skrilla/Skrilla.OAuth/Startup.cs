@@ -30,6 +30,7 @@ namespace Skrilla.OAuth
                 .AddSigningCredential(new X509Certificate2(@"skrilla.pfx", "alagrandelepusecuca"))
                 .AddTestUsers(InMemoryConfiguration.Users().ToList())
                 .AddInMemoryClients(InMemoryConfiguration.Clients())
+                .AddInMemoryIdentityResources(InMemoryConfiguration.IdentityResources())
                 .AddInMemoryApiResources(InMemoryConfiguration.ApiResources())
                 .AddInMemoryApiScopes(InMemoryConfiguration.ApiScopes());
 
