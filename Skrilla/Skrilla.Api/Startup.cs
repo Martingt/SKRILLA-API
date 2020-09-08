@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using IdentityServer4;
 
 namespace Skrilla.Api
@@ -28,15 +29,18 @@ namespace Skrilla.Api
         {
             services.AddControllers();
 
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = "http://localhost:59418";
-                    options.RequireHttpsMetadata = false;
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer",
+             options =>
+             {
+                 options.Authority = "http://localhost:59418";
+                 options.Audience = "skrilla";
+                 options.RequireHttpsMetadata = false;
 
-                    options.ApiName = "skrilla";
-                    options.ApiSecret = "secret";
-                });
+                 options.TokenValidationParameters = new TokenValidationParameters()
+                 {
+                     ValidateAudience = false
+                 };
+             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
