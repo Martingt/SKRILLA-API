@@ -14,6 +14,14 @@ namespace Skrilla.OAuth.Configuration
                 };
         }
 
+        public static IEnumerable<ApiScope> ApiScopes()
+        {
+            return new[] {
+                    new ApiScope("skrilla", "Skrilla")
+                };
+        }
+
+
         public static IEnumerable<Client> Clients()
         {
             return new[] {

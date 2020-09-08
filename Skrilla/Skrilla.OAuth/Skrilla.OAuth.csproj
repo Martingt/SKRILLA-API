@@ -6,8 +6,54 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configuration\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\js\signin-redirect.js" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_code.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_toasts.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_jumbotron.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_navbar.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_variables.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_input-group.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_progress.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_functions.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_popover.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_breadcrumb.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_carousel.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\bootstrap.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\_badge.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_reset-text.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_hover.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_image.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_badge.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_lists.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_deprecate.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_float.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_text-truncate.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_gradients.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_text-emphasis.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_table-row.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_background-variant.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_breakpoints.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_box-shadow.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_forms.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_buttons.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_grid-framework.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_transition.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_caret.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_resize.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_screen-reader.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_nav-divider.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_list-group.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_pagination.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_clearfix.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_grid.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_text-hide.scss" />
+    <Content Remove="wwwroot\lib\bootstrap\scss\mixins\_alert.scss" />
   </ItemGroup>
 </Project>
