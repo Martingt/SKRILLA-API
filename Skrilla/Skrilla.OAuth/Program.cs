@@ -20,7 +20,7 @@ namespace Skrilla.OAuth
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://localhost:59418");
+                    webBuilder.UseUrls("http://localhost:6001");
                     webBuilder.UseStartup<Startup>();
                 });
     }
