@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Skrilla.OAuth.Configuration;
 
 namespace Skrilla.OAuth
@@ -33,7 +35,7 @@ namespace Skrilla.OAuth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=IdentityServer4.Quickstart.EntityFramework-2.0.0;trusted_connection=yes;";
+            //const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=IdentityServer4.Quickstart.EntityFramework-2.0.0;trusted_connection=yes;";
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             //services.AddIdentity<IdentityUser, IdentityRole>(config =>
@@ -52,27 +54,22 @@ namespace Skrilla.OAuth
             //});
 
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("http://localhost:5000/login",
-                                                          "http://localhost:5000")
-                                                        .AllowAnyHeader()
-                                                        .AllowAnyMethod();
-                                  });
+            services.AddSingleton<ICorsPolicyService>((container) => {
+                var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
+                return new DefaultCorsPolicyService(logger)
+                {
+                    AllowAll = true
+                };
             });
-
             services.AddIdentityServer()
                 .AddSigningCredential(new X509Certificate2(@"skrilla.pfx", "alagrandelepusecuca"))
                 .AddTestUsers(InMemoryConfiguration.Users().ToList())
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
-                })
+                //.AddConfigurationStore(options =>
+                //{
+                //    options.ConfigureDbContext = builder =>
+                //        builder.UseSqlServer(connectionString,
+                //            sql => sql.MigrationsAssembly(migrationsAssembly));
+                //})
                 // this adds the operational data from DB (codes, tokens, consents)
                 //.AddOperationalStore(options =>
                 //{
@@ -98,7 +95,7 @@ namespace Skrilla.OAuth
             //InitializeDatabase(app);
 
             app.UseDeveloperExceptionPage();
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors();
             app.UseIdentityServer();
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
