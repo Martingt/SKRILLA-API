@@ -21,6 +21,8 @@ namespace Skrilla.OAuth
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -50,7 +52,18 @@ namespace Skrilla.OAuth
             //});
 
 
-                
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:5000/login",
+                                                          "http://localhost:5000")
+                                                        .AllowAnyHeader()
+                                                        .AllowAnyMethod();
+                                  });
+            });
+
             services.AddIdentityServer()
                 .AddSigningCredential(new X509Certificate2(@"skrilla.pfx", "alagrandelepusecuca"))
                 .AddTestUsers(InMemoryConfiguration.Users().ToList())
@@ -85,6 +98,7 @@ namespace Skrilla.OAuth
             //InitializeDatabase(app);
 
             app.UseDeveloperExceptionPage();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseIdentityServer();
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
