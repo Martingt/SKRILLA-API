@@ -1,141 +1,104 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
-using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Skrilla.OAuth.Configuration;
+using Skrilla.OAuth.Data;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Skrilla.OAuth
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _env;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration config, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            _config = config;
+            _env = env;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=IdentityServer4.Quickstart.EntityFramework-2.0.0;trusted_connection=yes;";
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var connectionString = _config.GetConnectionString("DefaultConnection");
 
-            //services.AddIdentity<IdentityUser, IdentityRole>(config =>
-            //{
-            //    config.Password.RequiredLength = 4;
-            //    config.Password.RequireDigit = false;
-            //    config.Password.RequireNonAlphanumeric = false;
-            //    config.Password.RequireUppercase = false;
-            //})
-            //    .AddEntityFrameworkStores
+            services.AddDbContext<AppDbContext>(
+                options => options.UseMySQL(connectionString)
+            );
+            
 
-            //services.ConfigureApplicationCookie(config =>
-            //{
-            //    config.Cookie.Name = "IdentityServer.Cookie";
-            //    config.LoginPath = "/Auth/Login";
-            //});
+            // AddIdentity registers the services
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.Password.RequiredLength = 4;
+                config.Password.RequireDigit = false;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
+            })
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
-
-            services.AddSingleton<ICorsPolicyService>((container) => {
-                var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
-                return new DefaultCorsPolicyService(logger)
-                {
-                    AllowAll = true
-                };
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "IdentityServer.Cookie";
+                config.LoginPath = "/Auth/Login";
+                config.LogoutPath = "/Auth/Logout";
             });
+
+            var assembly = typeof(Startup).Assembly.GetName().Name;
+
+            var filePath = Path.Combine(_env.ContentRootPath, "skrilla.pfx");
+            var certificate = new X509Certificate2(filePath, "alagrandelepusecuca");
+
             services.AddIdentityServer()
-                .AddSigningCredential(new X509Certificate2(@"skrilla.pfx", "alagrandelepusecuca"))
-                .AddTestUsers(InMemoryConfiguration.Users().ToList())
-                //.AddConfigurationStore(options =>
-                //{
-                //    options.ConfigureDbContext = builder =>
-                //        builder.UseSqlServer(connectionString,
-                //            sql => sql.MigrationsAssembly(migrationsAssembly));
-                //})
-                // this adds the operational data from DB (codes, tokens, consents)
-                //.AddOperationalStore(options =>
-                //{
-                //    options.ConfigureDbContext = builder =>
-                //        builder.UseSqlServer(connectionString,
-                //            sql => sql.MigrationsAssembly(migrationsAssembly));
+                .AddAspNetIdentity<IdentityUser>()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                        sql => sql.MigrationsAssembly(assembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                        sql => sql.MigrationsAssembly(assembly));
+                })
+                //.AddSigningCredential(certificate);
+                .AddInMemoryApiResources(Configuration.GetApis())
+                .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
+                .AddInMemoryClients(Configuration.GetClients())
+                .AddDeveloperSigningCredential();
 
-                //    // this enables automatic token cleanup. this is optional.
-                //    options.EnableTokenCleanup = true;
-                //    options.TokenCleanupInterval = 30;
-                //});
-                .AddInMemoryClients(InMemoryConfiguration.Clients())
-                .AddInMemoryIdentityResources(InMemoryConfiguration.IdentityResources())
-                .AddInMemoryApiResources(InMemoryConfiguration.ApiResources())
-                .AddInMemoryApiScopes(InMemoryConfiguration.ApiScopes());
-
-            services.AddMvc(option => option.EnableEndpointRouting = false);
+            
+            services.AddControllersWithViews();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //InitializeDatabase(app);
-
-            app.UseDeveloperExceptionPage();
-            app.UseCors();
-            app.UseIdentityServer();
-            app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
-        }
-
-        private void InitializeDatabase(IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            if (env.IsDevelopment())
             {
-                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                context.Database.Migrate();
-                if (!context.Clients.Any())
-                {
-                    foreach (var client in InMemoryConfiguration.Clients())
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-
-                if (!context.IdentityResources.Any())
-                {
-                    foreach (var resource in InMemoryConfiguration.IdentityResources())
-                    {
-                        context.IdentityResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-
-                if (!context.ApiResources.Any())
-                {
-                    foreach (var resource in InMemoryConfiguration.ApiResources())
-                    {
-                        context.ApiResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
+                app.UseDeveloperExceptionPage();
             }
+
+            app.UseRouting();
+
+            app.UseIdentityServer();
+
+            if (_env.IsDevelopment())
+            {
+                app.UseCookiePolicy(new CookiePolicyOptions()
+                {
+                    MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+                });
+            }
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }
