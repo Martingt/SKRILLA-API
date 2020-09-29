@@ -23,6 +23,9 @@
     <PackageReference Include="MySqlConnector" Version="1.0.1" />
     <PackageReference Include="MySql.Data" Version="8.0.21" />
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
   </ItemGroup>
 	<ItemGroup>
 		<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />

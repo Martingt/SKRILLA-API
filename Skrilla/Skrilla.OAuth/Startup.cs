@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Skrilla.OAuth.Data;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging;
+using IdentityServer4.Services;
 
 namespace Skrilla.OAuth
 {
@@ -29,10 +31,17 @@ namespace Skrilla.OAuth
             services.AddDbContext<AppDbContext>(
                 options => options.UseMySQL(connectionString)
             );
-            
 
-            // AddIdentity registers the services
-            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Policy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000");
+                    });
+            });
+                // AddIdentity registers the services
+                services.AddIdentity<IdentityUser, IdentityRole>(config =>
             {
                 config.Password.RequiredLength = 4;
                 config.Password.RequireDigit = false;
@@ -54,22 +63,31 @@ namespace Skrilla.OAuth
             var filePath = Path.Combine(_env.ContentRootPath, "skrilla.pfx");
             var certificate = new X509Certificate2(filePath, "alagrandelepusecuca");
 
+            services.AddSingleton<ICorsPolicyService>((container) => {
+                var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
+                return new DefaultCorsPolicyService(logger)
+                {
+                    AllowAll = true
+                };
+            });
+
             services.AddIdentityServer()
                 .AddAspNetIdentity<IdentityUser>()
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
-                        sql => sql.MigrationsAssembly(assembly));
-                })
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
-                        sql => sql.MigrationsAssembly(assembly));
-                })
-                //.AddSigningCredential(certificate);
+                //.AddConfigurationStore(options =>
+                //{
+                //    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                //        sql => sql.MigrationsAssembly(assembly));
+                //})
+                //.AddOperationalStore(options =>
+                //{
+                //    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                //        sql => sql.MigrationsAssembly(assembly));
+                //})
+                .AddSigningCredential(certificate)
                 .AddInMemoryApiResources(Configuration.GetApis())
                 .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
                 .AddInMemoryClients(Configuration.GetClients())
+                .AddInMemoryApiScopes(Configuration.ApiScopes())
                 .AddDeveloperSigningCredential();
 
             
@@ -84,6 +102,8 @@ namespace Skrilla.OAuth
             }
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseIdentityServer();
 

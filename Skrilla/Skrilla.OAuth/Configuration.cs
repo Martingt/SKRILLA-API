@@ -30,6 +30,14 @@ namespace Skrilla.OAuth
 
         public static IEnumerable<Client> GetClients() =>
             new List<Client> {
+                new Client
+                    {
+                        ClientId = "skrilla",
+                        ClientSecrets = new [] { new Secret("secret".Sha256()) },
+                        AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                        AllowedScopes = new [] { "skrilla" }
+                    },
+
                 new Client {
                     ClientId = "client_id",
                     ClientSecrets = { new Secret("client_secret".ToSha256()) },
@@ -65,6 +73,7 @@ namespace Skrilla.OAuth
                     ClientId = "client_id_js",
 
                     AllowedGrantTypes = GrantTypes.Code,
+                    //AllowedCorsOrigins = { "http://localhost:3000" },
                     RequirePkce = true,
                     RequireClientSecret = false,
 
@@ -74,9 +83,7 @@ namespace Skrilla.OAuth
 
                     AllowedScopes = {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        "ApiOne",
-                        "ApiTwo",
-                        "rc.scope",
+                        "skrilla"
                     },
 
                     AccessTokenLifetime = 1,
@@ -160,5 +167,13 @@ namespace Skrilla.OAuth
                 },
 
             };
+
+        public static IEnumerable<ApiScope> ApiScopes()
+        {
+            return new[] {
+                    new ApiScope("skrilla", "Skrilla")
+                };
+        }
+
     }
 }
