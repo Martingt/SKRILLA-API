@@ -7,7 +7,7 @@
     - Contraseña
     - Nombre de base de datos
  
- 2. Ejecutar la siguiente query en la base de datos:
+ 2. Crear una db para el auth server y ejecutar la siguiente query en la base de datos:
  
  CREATE TABLE \`__EFMigrationsHistory\` 
 ( 
