@@ -21,7 +21,5 @@
 4. Abrir una terminal e ir a la carpeta del proyecto Skrilla.OAuth
 
 5. Ejecutar:
-    - dotnet ef migrations add InitialIdentityServerPersistedGrantDbMigration -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
-    - dotnet ef migrations add InitialIdentityServerConfigurationDbMigration -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
     - dotnet ef migrations add init -c AppDbContext -o Data/Migrations/AppMigrations
     - dotnet ef database update -c AppDbContext
