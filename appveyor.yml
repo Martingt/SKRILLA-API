@@ -1,0 +1,12 @@
+version: '0.1.2-beta-{build}'
+
+platform: Any CPU
+configuration: Release
+os: Visual Studio 2017
+
+before_build:
+  - dotnet restore
+
+build:
+  parallel: true            
+  project: Skrilla.sln
