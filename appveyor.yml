@@ -10,10 +10,10 @@ build:
   project: Skrilla\Skrilla.sln
 
 after_build:
-  - dotnet pack ".\Skrilla\Skrilla.OAuth\Skrilla.OAuth.csproj" -c %CONFIGURATION% -o ..\artifacts
+  - dotnet pack ".\Skrilla\Skrilla.OAuth\Skrilla.OAuth.csproj" -c %CONFIGURATION% -o Skrilla
 
 artifacts:
-  - path: artifacts\**\*.*
+  - path: Skrilla\**\*.*
   
 cache:
   - '%USERPROFILE%\.nuget\packages'
