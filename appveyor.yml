@@ -21,6 +21,6 @@ cache:
 deploy:
   provider: NuGet
   api_key:
-    secure: oy2h6mmbksmtf74witpqatog77onwuwuhfr5hxqpsvvqxi
+    secure: az+/lqhvaiqGOrTYIwgA1prJVMhDPayxs2HLYSSIgrs=
   skip_symbols: false
   artifact: /.*\.nupkg/
