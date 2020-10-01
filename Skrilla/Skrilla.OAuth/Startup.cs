@@ -90,6 +90,8 @@ namespace Skrilla.OAuth
                 .AddInMemoryApiScopes(Configuration.ApiScopes())
                 .AddDeveloperSigningCredential();
 
+             services.AddScoped<IProfileService, ProfileService>();
+
             
             services.AddControllersWithViews();
         }

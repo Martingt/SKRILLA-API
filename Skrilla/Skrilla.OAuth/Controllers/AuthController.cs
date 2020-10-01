@@ -53,7 +53,7 @@ namespace Skrilla.OAuth.Controllers
                 return View(vm);
             }
 
-            var user = new IdentityUser(vm.Email);
+            var user = new IdentityUser(vm.Email); 
             var result = await _userManager.CreateAsync(user, vm.Password);
 
             if (result.Succeeded)
