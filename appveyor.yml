@@ -6,7 +6,7 @@ before_build:
   - dotnet restore Skrilla\Skrilla.sln
 
 build:
-  parallel: true            
+  parallel: true
   project: Skrilla\Skrilla.sln
 
 after_build:
@@ -14,13 +14,13 @@ after_build:
 
 artifacts:
   - path: Skrilla\**\*.*
-  
+
 cache:
   - '%USERPROFILE%\.nuget\packages'
-  
+
 deploy:
   provider: NuGet
   api_key:
-    secure: az+/lqhvaiqGOrTYIwgA1prJVMhDPayxs2HLYSSIgrs=
+    secure: AgpTFC5qJmkZT7dOYZpEz2dQjYm5JZp4F7KmKHfxzUQ=
   skip_symbols: false
   artifact: /.*\.nupkg/
