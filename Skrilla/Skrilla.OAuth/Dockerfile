@@ -20,11 +20,11 @@ RUN  apt-get update \
 
 RUN dotnet --info
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY Skrilla/Skrilla.OAuth/*.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
-COPY . ./
+COPY Skrilla/Skrilla.OAuth/. ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
