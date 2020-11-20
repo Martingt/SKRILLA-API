@@ -19,17 +19,21 @@ RUN  apt-get update \
 
 
 RUN dotnet --info
+RUN apt-get install ca-certificates
+
 # Copy csproj and restore as distinct layers
-COPY Skrilla/Skrilla.OAuth/*.csproj ./
+COPY *.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
-COPY Skrilla/Skrilla.OAuth/. ./
+COPY . ./
 RUN dotnet publish -c Release -o out
 
+COPY skrilla.pfx ./out
+
 # Build runtime image
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/aspnet:3.1
 #FROM microsoft/dotnet:2.0-sdk 
 WORKDIR /app
 COPY --from=build-env /app/out .
-CMD dotnet AspNetCoreHerokuDocker.dll
+CMD dotnet Skrilla.OAuth.dll

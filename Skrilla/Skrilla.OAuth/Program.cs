@@ -23,13 +23,7 @@ namespace IdentityServer
                 var userManager = scope.ServiceProvider
                     .GetRequiredService<UserManager<IdentityUser>>();
 
-                var user = new IdentityUser("bob");
-                userManager.CreateAsync(user, "password").GetAwaiter().GetResult();
-                userManager.AddClaimAsync(user, new Claim("rc.garndma", "big.cookie"))
-                    .GetAwaiter().GetResult();
-                userManager.AddClaimAsync(user,
-                    new Claim("rc.api.garndma", "big.api.cookie"))
-                    .GetAwaiter().GetResult();
+                
 
                 //scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>()
                 //    .Database.Migrate();
@@ -74,7 +68,7 @@ namespace IdentityServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("https://localhost:"+ Environment.GetEnvironmentVariable("PORT"));
+                    webBuilder.UseUrls("http://localhost:"+ Environment.GetEnvironmentVariable("PORT"));
                 });
     }
 }
