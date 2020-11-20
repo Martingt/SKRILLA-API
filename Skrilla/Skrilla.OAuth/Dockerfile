@@ -22,14 +22,14 @@ RUN dotnet --info
 RUN apt-get install ca-certificates
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY Skrilla/Skrilla.OAuth/*.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
-COPY . ./
+COPY Skrilla/Skrilla.OAuth/. ./
 RUN dotnet publish -c Release -o out
 
-COPY skrilla.pfx ./out
+COPY Skrilla/Skrilla.OAuth/skrilla.pfx ./out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:3.1
