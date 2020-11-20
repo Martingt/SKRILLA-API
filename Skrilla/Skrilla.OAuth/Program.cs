@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Skrilla.OAuth;
 using System.Linq;
 using System.Security.Claims;
+using System;
 
 namespace IdentityServer
 {
