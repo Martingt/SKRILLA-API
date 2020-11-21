@@ -68,7 +68,7 @@ namespace IdentityServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://localhost:"+ Environment.GetEnvironmentVariable("PORT"));
+                    webBuilder.UseUrls("http://0.0.0.0:"+ Environment.GetEnvironmentVariable("PORT"));
                 });
     }
 }
