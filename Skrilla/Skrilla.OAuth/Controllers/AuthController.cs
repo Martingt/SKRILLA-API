@@ -44,7 +44,7 @@ namespace Skrilla.OAuth.Controllers
             return View();
         }
 
-        [DisableCors]
+        [EnableCors("Policy")]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel vm)
         {

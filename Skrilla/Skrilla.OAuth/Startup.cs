@@ -37,9 +37,7 @@ namespace Skrilla.OAuth
                 options.AddPolicy("Policy",
                     builder =>
                     {
-                        builder.WithOrigins("https://skrilla-ui.herokuapp.com",
-                            "http://skrilla-ui.herokuapp.com"
-                            );
+                        builder.WithOrigins("*");
                     });
             });
                 // AddIdentity registers the services
