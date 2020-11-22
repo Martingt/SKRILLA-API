@@ -24,7 +24,6 @@ namespace Skrilla.OAuth.Controllers
             _interactionService = interactionService;
         }
 
-        [EnableCors("Policy")]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel vm)
         {
@@ -44,7 +43,6 @@ namespace Skrilla.OAuth.Controllers
             return View();
         }
 
-        [EnableCors("Policy")]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel vm)
         {
