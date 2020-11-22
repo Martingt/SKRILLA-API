@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Skrilla.OAuth;
 using System.Linq;
 using System.Security.Claims;
+using System;
 
 namespace IdentityServer
 {
@@ -22,13 +23,7 @@ namespace IdentityServer
                 var userManager = scope.ServiceProvider
                     .GetRequiredService<UserManager<IdentityUser>>();
 
-                var user = new IdentityUser("bob");
-                userManager.CreateAsync(user, "password").GetAwaiter().GetResult();
-                userManager.AddClaimAsync(user, new Claim("rc.garndma", "big.cookie"))
-                    .GetAwaiter().GetResult();
-                userManager.AddClaimAsync(user,
-                    new Claim("rc.api.garndma", "big.api.cookie"))
-                    .GetAwaiter().GetResult();
+                
 
                 //scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>()
                 //    .Database.Migrate();
@@ -73,6 +68,7 @@ namespace IdentityServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://0.0.0.0:"+ Environment.GetEnvironmentVariable("PORT"));
                 });
     }
 }
