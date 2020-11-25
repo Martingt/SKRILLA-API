@@ -105,7 +105,7 @@ namespace Skrilla.OAuth
 
             app.UseRouting();
 
-            app.UseCors("Policy");
+            app.UseCors();
 
             app.UseIdentityServer();
 
