@@ -34,15 +34,11 @@ namespace Skrilla.OAuth
 
             services.AddCors(options =>
             {
-                options.AddPolicy("Policy",
-                    builder =>
-                    {
-                        options.AddDefaultPolicy(builder =>
-                            builder.SetIsOriginAllowed(_ => true)
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials());
-                    });
+                options.AddDefaultPolicy(builder =>
+                   builder.SetIsOriginAllowed(_ => true)
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials());
             });
                 // AddIdentity registers the services
                 services.AddIdentity<IdentityUser, IdentityRole>(config =>
